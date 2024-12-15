@@ -1,25 +1,30 @@
 import { View, TouchableOpacity } from "react-native";
 import { Sun, Moon } from "lucide-react-native";
 import getStyle from "../styles";
-import { useStore } from "../store/useStore";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const BgMode = () => {
-  const changeBackground = useStore((state) => state.changeBackground);
-  const isDarkMode = useStore((state) => state.background);
-  const styles = getStyle(isDarkMode);
+const BgMode = ({isDark, setIsDark}) => {
+
+  const styles = getStyle(isDark);
   return (
     <View style={styles.lightDark}>
       <TouchableOpacity
-        onPress={() => changeBackground(true)}
+        onPress={() => {
+          setIsDark(true)
+          AsyncStorage.setItem("dark", "true")
+        }}
         style={styles.toggleButton}
       >
-        <Moon size={15} color={isDarkMode ? "#fff" : "#000"} />
+        <Moon size={15} color={isDark ? "#fff" : "#000"} />
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={() => changeBackground(false)}
+        onPress={() => {
+          setIsDark(false)
+          AsyncStorage.setItem("dark", "false")
+        }}
         style={styles.toggleButton}
       >
-        <Sun size={15} color={isDarkMode ? "#fff" : "#000"} />
+        <Sun size={15} color={isDark ? "#fff" : "#000"} />
       </TouchableOpacity>
     </View>
   );

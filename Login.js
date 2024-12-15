@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { useStore } from "./store/useStore";
+import { useState, useEffect } from "react";
 import getStyle from "./styles";
 import BgMode from "./component/BgMode";
 import {
@@ -13,38 +12,43 @@ import {
 } from "react-native";
 import { User, Lock, ArrowRightCircle, Eye, EyeOff } from "lucide-react-native";
 import login from "./database_actions/login";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const isDarkMode = useStore((state) => state.background);
-  const [isLogin, setIsLogin] = useState(false)
+  const [isDark, setIsDark] = useState(null);
+
+
+  useEffect(() => {
+    const setDarkMode = async () => {
+      const result = await AsyncStorage.getItem("dark")
+      setIsDark(result === "true"? true : false)
+    }
+    setDarkMode()
+  }, [])
 
   const handleSignUp = async () => {
     try {
       setLoading(true);
       const resultLogin = await login (email,password);
-      setIsLogin(resultLogin);
+      if(resultLogin){
+        setTimeout(() => {
+          navigation.navigate("Main");
+        },200)
+      }
     } catch (error) {
       console.error(error);
     }
+    finally{
+      setLoading(false)
+    }
   };
 
-  if(isLogin){
-    setTimeout(() => {
-      setLoading(false);
-      navigation.navigate("Main");
-    }, 100);
-  }
-  else{
-    setTimeout(() => {
-      setLoading(false);
-    }, 100);
-  }
 
-  const styles = getStyle(isDarkMode);
+  const styles = getStyle(isDark);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -54,16 +58,18 @@ const Login = ({ navigation }) => {
             style={{
               fontSize: 30,
               marginBottom: 10,
-              color: isDarkMode ? "white" : "#030712",
+              color: isDark ? "white" : "#030712",
             }}
           >
             Login
           </Text>
-          <Text style={{ color: isDarkMode ? "white" : "#030712" }}>
-            Doesn't Have an Account?
-            <Text style={{ color: "#7c3aed" }}> Signup </Text>
-          </Text>
-          <BgMode />
+          <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
+              <View style={{flexDirection:"row"}}>
+                <Text style={{color: isDark ? "white" : "#030712"}}>Doesn't Have an account?</Text>
+                <Text style={{ color: "#7c3aed" }}> Sign up </Text>
+              </View>
+            </TouchableOpacity>
+          <BgMode isDark={isDark} setIsDark={setIsDark} />
         </View>
         <View
           style={{
@@ -79,7 +85,7 @@ const Login = ({ navigation }) => {
               style={{
                 marginBottom: 5,
                 fontSize: 15,
-                color: isDarkMode ? "white" : "#030712",
+                color: isDark ? "white" : "#030712",
               }}
             >
               Enter your Email:
@@ -106,7 +112,7 @@ const Login = ({ navigation }) => {
                 style={{
                   marginBottom: 5,
                   fontSize: 15,
-                  color: isDarkMode ? "white" : "#030712",
+                  color: isDark ? "white" : "#030712",
                 }}
               >
                 Enter your Password:

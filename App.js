@@ -1,24 +1,48 @@
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import SignUp from "./Signup";
-import Login from "./Login";
-import Getstarted from "./Getstarted";
-import Main from "./main";
+  import { NavigationContainer, useNavigation } from "@react-navigation/native";
+  import { createNativeStackNavigator } from "@react-navigation/native-stack";
+  import SignUp from "./Signup";
+  import Login from "./Login";
+  import Getstarted from "./Getstarted";
+  import Main from "./main";
+import { useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ActivityIndicator } from "react-native";
 
-const App = () => {
+  const App = () => {
+    const [isLogin, setIsLogin] = useState(null)
+    const Stack = createNativeStackNavigator()
 
-  const Stack = createNativeStackNavigator()
+    useEffect(() => {
+      const checkIslogin = async () => {
+        const loginStatus = await AsyncStorage.getItem("loginStatus")
+        console.log(loginStatus)
+        if(loginStatus === "true"){
+          setIsLogin(true)
+        }
+        else{
+          setIsLogin(false)
+        }
+      }
+      checkIslogin()
+    },[])
 
-  return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="start" component={Getstarted} options={{headerShown : false}} />
-        <Stack.Screen name="Signup" component={SignUp} options={{headerShown: false  }} />
-        <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
-        <Stack.Screen name="Main" component={Main} options={{headerShown: false}} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  )
-}
+    
+    if (isLogin === null) {
+      return (
+        <ActivityIndicator color={"blue"}/>
+      )
+    }
 
-export default App
+    return (
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName={isLogin ? "Main" : "start"}>
+          <Stack.Screen name="start" component={Getstarted} options={{headerShown : false}} />
+          <Stack.Screen name="Signup" component={SignUp} options={{headerShown: false  }} />
+          <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
+          <Stack.Screen name="Main" component={Main} options={{headerShown: false}} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    )
+  }
+
+  export default App

@@ -4,29 +4,29 @@ import { StyleSheet } from 'react-native';
 
 
 
-const styles = (isDarkMode) => StyleSheet.create({
+const styles = (isDark) => StyleSheet.create({
   container: {
     flex: 1,
     alignItems:'center',
     justifyContent : 'center',
     position: "relative",
     paddingBottom : 10,
-    backgroundColor: isDarkMode ? "#030712": "#ffffff",
+    backgroundColor: isDark ? "#030712": "#ffffff",
   },
   container2:{
     flex : 1,
     padding : 10,
     margin: 0,
-    backgroundColor: isDarkMode ? "#030712": "#ffffff",
+    backgroundColor: isDark ? "#030712": "#ffffff",
     justifyContent :'center',
     alignItems: 'center'
   },
   inputContainer: {
     flexDirection : 'row',
     alignItems: 'center',
-    borderColor: isDarkMode ? "#1f2937" : '#e5e7eb',
+    borderColor: isDark ? "#1f2937" : '#e5e7eb',
     justifyContent :'center',
-    backgroundColor : isDarkMode? "#0b111d" :'#f2f2f2',
+    backgroundColor : isDark? "#0b111d" :'#f2f2f2',
     borderWidth: 1,
     borderRadius: 10,
     padding: 10,
@@ -38,7 +38,7 @@ const styles = (isDarkMode) => StyleSheet.create({
     marginLeft: 10,
     fontSize: 16,
     border: "none",
-    color: "black",
+    color: isDark ? "white" : "#030712",
     outline:'none',
     borderWidth: 0,
   },
@@ -77,7 +77,7 @@ const styles = (isDarkMode) => StyleSheet.create({
     padding: 5,
     paddingLeft : 10,
     paddingRight: 10,
-    borderColor: isDarkMode ? "#1f2937" : "#e5e7eb"
+    borderColor: isDark ? "#1f2937" : "#e5e7eb"
   }
 });
 

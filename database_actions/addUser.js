@@ -19,11 +19,21 @@ const createTableUsers = async () => {
     }
 }
 
+
+const validateEmail = (email) => {
+    const emailSchema = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+    return emailSchema.test(email);
+  };
+
 const addUser = async (username, email,password, isSignedUp) => {
     try{
         await createTableUsers()
         if(!username || !email || !password){
             Alert.alert("provide all fields")
+            return false;
+        }
+        if (!validateEmail(email)) {
+            Alert.alert("Please enter a valid email")
             return false;
         }
         const db = await SQLite.openDatabaseAsync("memorySharing")

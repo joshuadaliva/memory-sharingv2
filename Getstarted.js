@@ -1,10 +1,20 @@
 import { SafeAreaView, Text, View, Image } from "react-native";
 import { TouchableOpacity } from "react-native";
+import { useState, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { useStore } from "./store/useStore";
 
 const Getstarted = ({ navigation }) => {
-  const isDarkMode = useStore((state) => state.background);
+
+  const [isDark, setIsDark] = useState(null);
+
+  useEffect(() => {
+    const setDarkMode = async () => {
+      const result = await AsyncStorage.getItem("dark")
+      setIsDark(result === "true"? true : false)
+    }
+    setDarkMode()
+  }, [])
 
   return (
     <SafeAreaView
@@ -13,7 +23,7 @@ const Getstarted = ({ navigation }) => {
         justifyContent: "center",
         position: "relative",
         flex: 1,
-        backgroundColor: isDarkMode ? "#030712" : "#ffffff",
+        backgroundColor: isDark ? "#030712" : "#ffffff",
       }}
     >
       <View
@@ -42,7 +52,7 @@ const Getstarted = ({ navigation }) => {
           <Text
             style={{
               fontSize: 30,
-              color: isDarkMode ? "white" : "black",
+              color: isDark ? "white" : "black",
               textAlign: "center",
             }}
           >

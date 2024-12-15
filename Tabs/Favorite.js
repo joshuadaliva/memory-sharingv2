@@ -7,72 +7,29 @@ import {
   FlatList,
   StatusBar,
 } from "react-native";
-import { Heart, Star, MapPin } from "lucide-react-native";
+import { Heart, Star, MapPin, Trash } from "lucide-react-native";
+import { useEffect, useState } from "react";
+import * as SQLite from 'expo-sqlite'
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { deleteFavorite } from "../database_actions/deleteMemory";
 
-const posts = [
-  {
-    id: "1",
-    title: "Eating at this place",
-    image:
-      "https://images.pexels.com/photos/693269/pexels-photo-693269.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    caption:
-      "Food is not just fuel; it's an experience that nourishes the soul. Gather around the table and let's make every bite count! 🍕✨",
-    userProfile:
-      "https://images.pexels.com/photos/670720/pexels-photo-670720.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    username: "Joshua Daliva",
-    location: "City Center",
-  },
-  {
-    id: "2",
-    title: "Traveling at this place",
-    image:
-      "https://images.pexels.com/photos/2265876/pexels-photo-2265876.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    caption:
-      "Every journey is a reminder of how vast and beautiful the world is. My heart belongs to the open road and the endless possibilities it brings! 🌍✨",
-    userProfile:
-      "https://images.pexels.com/photos/670720/pexels-photo-670720.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    username: "Joshua Daliva",
-    location: "Beachside",
-  },
-  {
-    id: "3",
-    title: "Relaxing at the beach",
-    image:
-      "https://images.pexels.com/photos/28868779/pexels-photo-28868779/free-photo-of-vibrant-coastal-sunset-with-splashing-waves.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    caption:
-      "There’s nothing quite like the sound of waves and the feeling of sand between my toes. Beach days are my happy days! 🏖️☀️",
-    userProfile:
-      "https://images.pexels.com/photos/670720/pexels-photo-670720.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    username: "Joshua Daliva",
-    location: "Sunny Beach",
-  },
-  {
-    id: "4",
-    title: "Exploring the mountains",
-    image:
-      "https://images.pexels.com/photos/1365425/pexels-photo-1365425.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    caption:
-      "The mountains are calling, and I must go! There's a sense of peace and adventure that comes with every hike. ⛰️🌲",
-    userProfile:
-      "https://images.pexels.com/photos/670720/pexels-photo-670720.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    username: "Joshua Daliva",
-    location: "Mountain Peak",
-  },
-  {
-    id: "5",
-    title: "Discovering new cultures",
-    image:
-      "https://images.pexels.com/photos/1313814/pexels-photo-1313814.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    caption:
-      "Every new place I visit teaches me something different about the world and its people. Embracing diversity enriches my travel experience! 🌎🤝",
-    userProfile:
-      "https://images.pexels.com/photos/670720/pexels-photo-670720.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    username: "Joshua Daliva",
-    location: "Cultural District",
-  },
-];
+const Favorite = ({ navigation }) => {
 
-const HomePost = ({ navigation }) => {
+  const [posts, setPosts] = useState([])
+  const [username, setUsername] = useState("")
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      const user_id = await AsyncStorage.getItem("id")
+      const usernames = await AsyncStorage.getItem("username")
+      setUsername(usernames)
+      const db = await SQLite.openDatabaseAsync("memorySharing")
+      const result = await db.getAllAsync("SELECT * FROM Favorites WHERE user_id = ?", [Number(user_id)])
+      setPosts(result)
+    }
+    fetchPosts()
+  },[navigation,posts])
+
   const renderItem = ({ item }) => (
     <View style={styles.postContainer}>
       <View style={{ padding: 10 }}>
@@ -89,7 +46,7 @@ const HomePost = ({ navigation }) => {
           resizeMode="cover"
         />
         <View style={styles.userDetails}>
-          <Text style={styles.username}>{item.username}</Text>
+          <Text style={styles.username}>{username}</Text>
           <View style={styles.locationContainer}>
             <MapPin size={16} color="gray" />
             <Text style={styles.locationText}>{item.location}</Text>
@@ -103,18 +60,25 @@ const HomePost = ({ navigation }) => {
           <Heart size={24} strokeWidth={2} color="red" />
         </TouchableOpacity>
         <TouchableOpacity>
-          <Star size={24} strokeWidth={2} color="orange" fill="orange" />
+          <Trash size={24} strokeWidth={2} color="orange" onPress={() => deleteFavorite(item.favorite_id)}/>
         </TouchableOpacity>
       </View>
     </View>
   );
+
+  if(posts.length === 0){
+    return(
+      <View style={{flex:1, justifyContent:"center", alignItems:"center"}}>
+        <Text style={{color:"red", textAlign:"center", fontWeight:"bold"}}>NO Favorites YET TRY TO MAKE ONE</Text>
+      </View>
+    )
+  }
 
   return (
     <View style={styles.container1}>
       <FlatList
         data={posts}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id}
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}
       />
@@ -193,4 +157,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomePost;
+export default Favorite;

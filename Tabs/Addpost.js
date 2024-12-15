@@ -5,25 +5,48 @@ import {
   Text,
   StyleSheet,
   StatusBar,
+  Image,
 } from "react-native";
-import { PlusCircle, MapPin } from "lucide-react-native";
+import { PlusCircle, MapPin, Rss } from "lucide-react-native";
+import * as ImagePicker from "expo-image-picker";
+import { useState } from "react";
+import postMemory from "../database_actions/postMemory";
 
 const AddPost = () => {
+  const [image, setImage] = useState(null);
+  const [title, setTitle] = useState("");
+  const [caption, setCaption] = useState("");
+  const [location, setLocation] = useState(null);
+
+  const pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ["images"],
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.uploadButton}>
+      <TouchableOpacity style={styles.uploadButton} onPress={pickImage}>
         <PlusCircle size={24} color="gray" />
-        <Text style={styles.buttonText}>Add Images</Text>
+        <Text style={styles.buttonText}>Add Image</Text>
       </TouchableOpacity>
-      <TextInput style={styles.input} placeholder="Title" />
+      <View style={{ alignItems: "center" }}>
+        {image && <Image source={{ uri: image }} style={styles.image} />}
+      </View>
+      <TextInput style={styles.input} placeholder="Title" value={title} onChangeText={setTitle}/>
       <TextInput
         style={[styles.input, { height: 100 }]}
         placeholder="Caption"
+        value={caption}
+        onChangeText={setCaption}
       />
-      <TouchableOpacity style={styles.locationButton}>
-        <MapPin size={24} color="gray" />
-        <Text style={styles.buttonText}> 'Add Location'</Text>
-      </TouchableOpacity>
+      <TextInput style={[styles.input]} placeholder="Location" value={location} onChangeText={setLocation}/>
 
       <TouchableOpacity
         style={{
@@ -31,6 +54,15 @@ const AddPost = () => {
           alignItems: "center",
           padding: 10,
           borderRadius: 10,
+        }}
+        onPress={async () => {
+          const result = await postMemory(image, title, caption, location)
+          if(result) {
+            setImage(null)
+            setTitle("")
+            setCaption("")
+            setLocation("")
+          }
         }}
       >
         <Text style={{ color: "white" }}> Post </Text>
@@ -70,11 +102,16 @@ const styles = StyleSheet.create({
     borderColor: "#ccc",
     borderRadius: 5,
     padding: 10,
-    marginBottom: 70,
   },
   buttonText: {
     marginLeft: 8,
     color: "gray",
+  },
+  image: {
+    width: "100%",
+    height: 200,
+    margin: 5,
+    borderRadius: 10,
   },
 });
 

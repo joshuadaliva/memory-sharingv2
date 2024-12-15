@@ -7,8 +7,30 @@ import {
   UserCheck,
   UserX,
 } from "lucide-react-native";
+import { useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const Profile = () => {
+const Profile = ({ navigation }) => {
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    const getUsername = async () => {
+      const name = await AsyncStorage.getItem("username");
+      setUsername(name);
+    };
+    getUsername();
+  }, []);
+
+  
+  const signOut = () => {
+    try {
+      AsyncStorage.setItem("loginStatus", "false");
+      navigation.navigate("start");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const isActive = true;
   return (
     <View style={styles.container}>
@@ -19,7 +41,7 @@ const Profile = () => {
           resizeMode="cover"
         />
 
-        <Text style={styles.username}>Joshua Daliva</Text>
+        <Text style={styles.username}>{username}</Text>
 
         <View style={styles.statusContainer}>
           {isActive ? (
@@ -55,6 +77,7 @@ const Profile = () => {
               styles.settingButton,
               { backgroundColor: "#F43F5E", marginTop: 30 },
             ]}
+            onPress={signOut}
           >
             <LogOut color="white" size={24} />
             <Text style={{ color: "white", marginLeft: 10 }}>Sign Out</Text>

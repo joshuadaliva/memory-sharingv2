@@ -28,8 +28,7 @@
     "react-native-gesture-handler": "~2.20.2",
     "@react-native-masked-view/masked-view": "0.3.2",
     "react-native-reanimated": "~3.16.1",
-    "zustand": "*",
-    "@types/react": "18.3.16"
+    "expo-image-picker": "~16.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
