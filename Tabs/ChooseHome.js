@@ -1,6 +1,6 @@
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import HomePost from "./HomePost";
-import HomeMap from "./HomeMap";
+import HomeMap from "./HomeMap/HomeMap";
 import { Image } from "react-native";
 const Drawer = createDrawerNavigator();
 
@@ -28,9 +28,9 @@ function DrawerNavigator() {
         }}
       />
       <Drawer.Screen
-        name="HomeMap"
+        name="Visited Places"
         component={HomeMap}
-        options={{ drawerLabel: "Home Map" }}
+        options={{ drawerLabel: "Visited Places" }}
       />
     </Drawer.Navigator>
   );

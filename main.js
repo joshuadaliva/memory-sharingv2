@@ -5,7 +5,7 @@ import Favorite from "./Tabs/Favorite";
 import { Home, Search, Plus, Heart, User } from "lucide-react-native";
 import ChooseHome from "./Tabs/ChooseHome";
 import AddPost from "./Tabs/Addpost";
-import Profile from "./Tabs/Profile";
+import Profile from "./Tabs/Profile/Profile";
 import SearchPage from "./Tabs/Search";
 
 const Tab = createBottomTabNavigator();

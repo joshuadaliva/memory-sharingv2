@@ -14,16 +14,19 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import addToFavorite from "../database_actions/addToFavorite";
 import {deleteMemory} from "../database_actions/deleteMemory";
 
+
 const HomePost = ({ navigation }) => {
 
   const [posts, setPosts] = useState([])
   const [username, setUsername] = useState("")
-
+  const [image, setImage] = useState(null)
   useEffect(() => {
     const fetchPosts = async () => {
       const user_id = await AsyncStorage.getItem("id")
       const usernames = await AsyncStorage.getItem("username")
       setUsername(usernames)
+      const profile = await AsyncStorage.getItem("image")
+      setImage(profile)
       const db = await SQLite.openDatabaseAsync("memorySharing")
       const result = await db.getAllAsync("SELECT * FROM posts WHERE user_id = ?", [Number(user_id)])
       setPosts(result)
@@ -42,11 +45,11 @@ const HomePost = ({ navigation }) => {
         />
       </View>
       <View style={styles.userInfo}>
-        <Image
-          source={require("../assets/me.png")}
-          style={styles.userImage}
-          resizeMode="cover"
-        />
+      <Image
+            source={image? {uri:image} : require("../assets/me.png")}
+            style={styles.userImage}
+            resizeMode="cover"
+          />
         <View style={styles.userDetails}>
           <Text style={styles.username}>{username}</Text>
           <View style={styles.locationContainer}>

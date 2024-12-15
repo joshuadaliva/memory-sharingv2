@@ -8,10 +8,11 @@ const createTableUsers = async () => {
         const db = await SQLite.openDatabaseAsync("memorySharing")
         await db.execAsync(`
             CREATE TABLE IF NOT EXISTS memory_users(
-                user_id INTEGER AUTOINCREMENT PRIMARY KEY,
+                user_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 username TEXT NOT NULL,
                 email TEXT UNIQUE NOT NULL,
-                password TEXT NOT NULL
+                password TEXT NOT NULL,
+                profile_pic TEXT
             )   
         `)
     }catch(error){
@@ -25,7 +26,7 @@ const validateEmail = (email) => {
     return emailSchema.test(email);
   };
 
-const addUser = async (username, email,password, isSignedUp) => {
+const addUser = async (username, email,password) => {
     try{
         await createTableUsers()
         if(!username || !email || !password){

@@ -1,4 +1,11 @@
-import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+} from "react-native";
 import {
   Bell,
   Lock,
@@ -12,18 +19,24 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Profile = ({ navigation }) => {
   const [username, setUsername] = useState("");
+  const [currentProfile, setCurrentProfile] = useState(null);
 
   useEffect(() => {
     const getUsername = async () => {
       const name = await AsyncStorage.getItem("username");
+      const profile = await AsyncStorage.getItem("image");
+      setCurrentProfile(profile)
       setUsername(name);
     };
     getUsername();
-  }, []);
+  },[navigation,username]);
 
-  
-  const signOut = () => {
+  const signOut = async () => {
     try {
+      AsyncStorage.setItem("id", "");
+      AsyncStorage.setItem("username", "");
+      AsyncStorage.setItem("email", "");
+      AsyncStorage.setItem("image", "");
       AsyncStorage.setItem("loginStatus", "false");
       navigation.navigate("start");
     } catch (error) {
@@ -36,9 +49,12 @@ const Profile = ({ navigation }) => {
     <View style={styles.container}>
       <View style={styles.container1}>
         <Image
-          source={require("../assets/me.png")}
+          source={
+            currentProfile
+              ? { uri: currentProfile }
+              : require("../../assets/me.png")
+          }
           style={styles.profileImage}
-          resizeMode="cover"
         />
 
         <Text style={styles.username}>{username}</Text>
@@ -57,7 +73,10 @@ const Profile = ({ navigation }) => {
         </View>
 
         <View style={styles.settingsContainer}>
-          <TouchableOpacity style={styles.settingButton}>
+          <TouchableOpacity
+            style={styles.settingButton}
+            onPress={() => navigation.navigate("Setting")}
+          >
             <Settings color="#7c3aed" size={24} />
             <Text style={styles.buttonText}>Profile Settings</Text>
           </TouchableOpacity>

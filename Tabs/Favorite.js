@@ -17,12 +17,15 @@ const Favorite = ({ navigation }) => {
 
   const [posts, setPosts] = useState([])
   const [username, setUsername] = useState("")
+  const [image, setImage] = useState(null)
 
   useEffect(() => {
     const fetchPosts = async () => {
       const user_id = await AsyncStorage.getItem("id")
       const usernames = await AsyncStorage.getItem("username")
       setUsername(usernames)
+      const profile = await AsyncStorage.getItem("image")
+      setImage(profile)
       const db = await SQLite.openDatabaseAsync("memorySharing")
       const result = await db.getAllAsync("SELECT * FROM Favorites WHERE user_id = ?", [Number(user_id)])
       setPosts(result)
@@ -40,11 +43,11 @@ const Favorite = ({ navigation }) => {
         />
       </View>
       <View style={styles.userInfo}>
-        <Image
-          source={require("../assets/me.png")}
-          style={styles.userImage}
-          resizeMode="cover"
-        />
+      <Image
+            source={image? {uri:image} : require("../assets/me.png")}
+            style={styles.userImage}
+            resizeMode="cover"
+          />
         <View style={styles.userDetails}>
           <Text style={styles.username}>{username}</Text>
           <View style={styles.locationContainer}>
@@ -60,7 +63,7 @@ const Favorite = ({ navigation }) => {
           <Heart size={24} strokeWidth={2} color="red" />
         </TouchableOpacity>
         <TouchableOpacity>
-          <Trash size={24} strokeWidth={2} color="orange" onPress={() => deleteFavorite(item.favorite_id)}/>
+          <Trash size={24} strokeWidth={2} color="orange" onPress={() => deleteFavorite(item.post_id)}/>
         </TouchableOpacity>
       </View>
     </View>

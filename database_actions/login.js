@@ -17,10 +17,10 @@ const login = async (email,password) => {
             Alert.alert("username or password is incorrect")
             return false;
         }
-        console.log(result)
-        AsyncStorage.setItem("id", result.id.toString())
+        AsyncStorage.setItem("id", result.user_id.toString())
         AsyncStorage.setItem("username", result.username)
         AsyncStorage.setItem("email", result.email)
+        AsyncStorage.setItem("image", result.profile_pic || "")
         AsyncStorage.setItem("loginStatus", "true")
         Alert.alert("Login sucessful")
         return true;

@@ -18,7 +18,6 @@ const createTablePosts = async () => {
                 FOREIGN KEY(user_id) REFERENCES memory_users(user_id)
             )   
         `)
-        Alert.alert("table created")
     }catch(error){
         console.log(error)
     }

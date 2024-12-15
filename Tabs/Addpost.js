@@ -6,6 +6,8 @@ import {
   StyleSheet,
   StatusBar,
   Image,
+  ScrollView,
+  Alert,
 } from "react-native";
 import { PlusCircle, MapPin, Rss } from "lucide-react-native";
 import * as ImagePicker from "expo-image-picker";
@@ -19,10 +21,15 @@ const AddPost = () => {
   const [location, setLocation] = useState(null);
 
   const pickImage = async () => {
+    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync()
+    if(!permission.granted){
+      Alert.alert("permission required, Access to media library is required")
+        return
+    }
+
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
       allowsEditing: true,
-      aspect: [4, 3],
       quality: 1,
     });
     if (!result.canceled) {
@@ -30,12 +37,34 @@ const AddPost = () => {
     }
   };
 
+
+  const takePicture = async () => {
+    const permission = await ImagePicker.requestCameraPermissionsAsync()
+    if(!permission.granted){
+      Alert.alert("permission required, Access to camera is required")
+    }
+    const result = await ImagePicker.launchCameraAsync({
+      quality:1
+    })
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  }
+
   return (
+    <ScrollView showsVerticalScrollIndicator={true} style={styles.container1}>
     <View style={styles.container}>
-      <TouchableOpacity style={styles.uploadButton} onPress={pickImage}>
-        <PlusCircle size={24} color="gray" />
-        <Text style={styles.buttonText}>Add Image</Text>
-      </TouchableOpacity>
+      <View style={{flexDirection:"row", justifyContent:"center", alignItems:"center", gap:5, marginBottom:10}}>
+        <TouchableOpacity style={styles.uploadButton} onPress={pickImage}>
+          <PlusCircle size={24} color="gray" />
+          <Text style={styles.buttonText}>Add Image</Text>
+        </TouchableOpacity>
+        <Text>OR</Text>
+        <TouchableOpacity style={styles.uploadButton} onPress={takePicture}>
+          <PlusCircle size={24} color="gray" />
+          <Text style={styles.buttonText}>Take Picture</Text>
+        </TouchableOpacity>
+      </View>
       <View style={{ alignItems: "center" }}>
         {image && <Image source={{ uri: image }} style={styles.image} />}
       </View>
@@ -70,6 +99,7 @@ const AddPost = () => {
 
       <StatusBar barStyle="auto" />
     </View>
+    </ScrollView>
   );
 };
 
@@ -78,6 +108,10 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: "#fff",
+  },
+  container1: {
+    flex: 1,
+    marginBottom: 90,
   },
   input: {
     borderWidth: 1,
@@ -109,7 +143,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: "100%",
-    height: 200,
+    height: 300,
     margin: 5,
     borderRadius: 10,
   },

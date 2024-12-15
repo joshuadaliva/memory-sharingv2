@@ -13,8 +13,10 @@ const createTableFavorites = async () => {
                 title TEXT NOT NULL,
                 caption TEXT NOT NULL,
                 location TEXT NOT NULL,
-                user_id INTEGER NO NULL,
+                user_id INTEGER NOT NULL,
+                post_id INTGER NOT NULL,
                 FOREIGN KEY(user_id) REFERENCES memory_users(user_id)
+                FOREIGN KEY(post_id) REFERENCES posts(post_id)
             )   
         `)
     }catch(error){
@@ -25,17 +27,17 @@ const createTableFavorites = async () => {
 const addToFavorite = async (image, title, caption, location,user_id, post_id) => {
     try{
         await createTableFavorites()
-        if(!image || !title || !caption || !location || !user_id){
+        if(!image || !title || !caption || !location || !user_id || !post_id){
             Alert.alert("use info is empty")
             return false;
         }
         const db = await SQLite.openDatabaseAsync("memorySharing")
-        const checkIfExist = await db.getFirstAsync("SELECT * FROM Favorites where favorite_id = ? AND title = ?", [post_id, title])
+        const checkIfExist = await db.getFirstAsync("SELECT * FROM Favorites where post_id = ?", [post_id])
         if(checkIfExist){
             Alert.alert("already added to favorites")
             return false
         }
-        await db.runAsync("INSERT INTO favorites(image, title,caption,location,user_id) VALUES (?,?,?,?,?)", [image,title,caption,location,user_id])
+        await db.runAsync("INSERT INTO favorites(image, title,caption,location,user_id,post_id) VALUES (?,?,?,?,?,?)", [image,title,caption,location,user_id,post_id])
         Alert.alert("added to favorite!")
         return true;
     }catch(error){

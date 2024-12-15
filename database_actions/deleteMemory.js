@@ -9,7 +9,7 @@ const deleteMemory = async (post_id) => {
         }
         const db = await SQLite.openDatabaseAsync("memorySharing")
         await db.runAsync("DELETE FROM posts WHERE post_id = ?", [post_id])
-        await db.runAsync("DELETE FROM Favorites WHERE favorite_id = ?", [post_id])
+        await db.runAsync("DELETE FROM Favorites WHERE post_id = ?", [post_id])
         Alert.alert("deleted successfully")
         return true;
     }catch(error){
@@ -18,14 +18,14 @@ const deleteMemory = async (post_id) => {
 }
 
 
-const deleteFavorite = async (favorite_id) => {
+const deleteFavorite = async (post_id) => {
     try{
-        if(!favorite_id){
+        if(!post_id){
             Alert.alert("favorite id is empty")
             return false;
         }
         const db = await SQLite.openDatabaseAsync("memorySharing")
-        await db.runAsync("DELETE FROM Favorites WHERE favorite_id = ?", [favorite_id])
+        await db.runAsync("DELETE FROM Favorites WHERE post_id = ?", [post_id])
         Alert.alert("deleted successfully")
         return true;
     }catch(error){

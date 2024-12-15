@@ -7,6 +7,8 @@
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ActivityIndicator } from "react-native";
+import Setting from './Tabs/Profile/Setting'
+import { LocationsPosted } from "./Tabs/HomeMap/LocationsPosted";
 
   const App = () => {
     const [isLogin, setIsLogin] = useState(null)
@@ -40,6 +42,8 @@ import { ActivityIndicator } from "react-native";
           <Stack.Screen name="Signup" component={SignUp} options={{headerShown: false  }} />
           <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
           <Stack.Screen name="Main" component={Main} options={{headerShown: false}} />
+          <Stack.Screen name="Setting" component={Setting}/>
+          <Stack.Screen name="locations" component={LocationsPosted} />
         </Stack.Navigator>
       </NavigationContainer>
     )

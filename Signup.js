@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useStore } from "./store/useStore";
 import getStyle from "./styles";
 import BgMode from "./component/BgMode";
 import {
