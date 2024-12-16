@@ -61,9 +61,6 @@ const Favorite = ({ navigation }) => {
       <Text style={styles.caption}>{item.caption}</Text>
       <View style={styles.iconContainer}>
         <TouchableOpacity>
-          <Heart size={24} strokeWidth={2} color="red" />
-        </TouchableOpacity>
-        <TouchableOpacity>
           <Trash size={24} strokeWidth={2} color="orange" onPress={() => {
             Alert.alert(
               "delete post",

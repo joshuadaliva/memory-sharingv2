@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Alert, FlatList, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Alert, FlatList } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import * as SQLite from 'expo-sqlite';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -28,10 +28,8 @@ const Notifications = ({ navigation }) => {
 
     const renderItem = ({ item }) => (
         <View style={styles.postContainer}>
-            <ScrollView showsVerticalScrollIndicator={true} style={styles.scroll} horizontal={true}>
             <Text>{item.title}</Text>
             <Text>{item.created_at}</Text>
-            </ScrollView>
         </View>
     );
 
@@ -67,7 +65,4 @@ const styles = StyleSheet.create({
         marginBottom:0,
         marginRight:20
     },
-    scroll:{
-        padding:1
-    }
 });
