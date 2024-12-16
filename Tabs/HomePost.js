@@ -6,34 +6,35 @@ import {
   TouchableOpacity,
   FlatList,
   StatusBar,
+  Alert,
 } from "react-native";
 import { Heart, Star, MapPin, Trash } from "lucide-react-native";
 import { useEffect, useState } from "react";
-import * as SQLite from 'expo-sqlite'
+import * as SQLite from "expo-sqlite";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import addToFavorite from "../database_actions/addToFavorite";
-import {deleteMemory} from "../database_actions/deleteMemory";
-
+import { deleteMemory } from "../database_actions/deleteMemory";
 
 const HomePost = ({ navigation }) => {
-
-  const [posts, setPosts] = useState([])
-  const [username, setUsername] = useState("")
-  const [image, setImage] = useState(null)
+  const [posts, setPosts] = useState([]);
+  const [username, setUsername] = useState("");
+  const [image, setImage] = useState(null);
   useEffect(() => {
     const fetchPosts = async () => {
-      const user_id = await AsyncStorage.getItem("id")
-      const usernames = await AsyncStorage.getItem("username")
-      setUsername(usernames)
-      const profile = await AsyncStorage.getItem("image")
-      setImage(profile)
-      const db = await SQLite.openDatabaseAsync("memorySharing")
-      const result = await db.getAllAsync("SELECT * FROM posts WHERE user_id = ?", [Number(user_id)])
-      setPosts(result)
-    }
-    fetchPosts()
-  },[navigation,posts])
-
+      const user_id = await AsyncStorage.getItem("id");
+      const usernames = await AsyncStorage.getItem("username");
+      setUsername(usernames);
+      const profile = await AsyncStorage.getItem("image");
+      setImage(profile);
+      const db = await SQLite.openDatabaseAsync("memorySharing");
+      const result = await db.getAllAsync(
+        "SELECT * FROM posts WHERE user_id = ?",
+        [Number(user_id)]
+      );
+      setPosts(result);
+    };
+    fetchPosts();
+  }, [navigation, posts]);
 
   const renderItem = ({ item }) => (
     <View style={styles.postContainer}>
@@ -45,11 +46,11 @@ const HomePost = ({ navigation }) => {
         />
       </View>
       <View style={styles.userInfo}>
-      <Image
-            source={image? {uri:image} : require("../assets/me.png")}
-            style={styles.userImage}
-            resizeMode="cover"
-          />
+        <Image
+          source={image ? { uri: image } : require("../assets/mee.png")}
+          style={styles.userImage}
+          resizeMode="cover"
+        />
         <View style={styles.userDetails}>
           <Text style={styles.username}>{username}</Text>
           <View style={styles.locationContainer}>
@@ -61,22 +62,57 @@ const HomePost = ({ navigation }) => {
       <Text style={styles.title}>{item.title}</Text>
       <Text style={styles.caption}>{item.caption}</Text>
       <View style={styles.iconContainer}>
-        <TouchableOpacity onPress={() => addToFavorite(item.image, item.title, item.caption, item.location, item.user_id, item.post_id)}>
+        <TouchableOpacity
+          onPress={() =>
+            addToFavorite(
+              item.image,
+              item.title,
+              item.caption,
+              item.location,
+              item.user_id,
+              item.post_id
+            )
+          }
+        >
           <Heart size={24} strokeWidth={2} color="red" />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => deleteMemory(item.post_id)}>
+        <TouchableOpacity
+          onPress={() => {
+            Alert.alert(
+              "delete post",
+              "do you want to delete this post?",
+              [
+                {
+                  text: "Cancel",
+                  onPress: () => {
+                    console.log("you canceled delete");
+                  },
+                },
+                {
+                  text: "delete",
+                  onPress: () => {
+                    deleteMemory(item.post_id);
+                  },
+                },
+              ],
+              { cancelable: false }
+            );
+          }}
+        >
           <Trash size={24} strokeWidth={2} color="orange" />
         </TouchableOpacity>
       </View>
     </View>
   );
 
-  if(posts.length === 0){
-    return(
-      <View style={{flex:1, justifyContent:"center", alignItems:"center"}}>
-        <Text style={{color:"red", textAlign:"center", fontWeight:"bold"}}>NO POST YET TRY TO MAKE ONE</Text>
+  if (posts.length === 0) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text style={{ color: "red", textAlign: "center", fontWeight: "bold" }}>
+          NO POST YET TRY TO MAKE ONE
+        </Text>
       </View>
-    )
+    );
   }
 
   return (

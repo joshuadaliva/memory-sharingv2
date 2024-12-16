@@ -3,24 +3,6 @@ import { Alert, StyleSheet, Text, View } from 'react-native'
 import * as SQLite from 'expo-sqlite'
 
 
-const createTableUsers = async () => {
-    try{
-        const db = await SQLite.openDatabaseAsync("memorySharing")
-        await db.execAsync(`
-            CREATE TABLE IF NOT EXISTS memory_users(
-                user_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                username TEXT NOT NULL,
-                email TEXT UNIQUE NOT NULL,
-                password TEXT NOT NULL,
-                profile_pic TEXT
-            )   
-        `)
-    }catch(error){
-        console.log(error)
-    }
-}
-
-
 const validateEmail = (email) => {
     const emailSchema = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
     return emailSchema.test(email);
@@ -28,7 +10,6 @@ const validateEmail = (email) => {
 
 const addUser = async (username, email,password) => {
     try{
-        await createTableUsers()
         if(!username || !email || !password){
             Alert.alert("provide all fields")
             return false;

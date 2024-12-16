@@ -77,7 +77,7 @@ const Setting = ({navigation}) => {
       <View style={styles.section}>
         <Text style={styles.text}>Profile Information</Text>
         <Image
-          source={currentProfile? {uri: currentProfile} : require("../../assets/me.png")}
+          source={currentProfile? {uri: currentProfile} : require("../../assets/mee.png")}
           style={styles.profileImage}
         />
         <Text>Username: {username}</Text>

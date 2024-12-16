@@ -9,6 +9,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ActivityIndicator } from "react-native";
 import Setting from './Tabs/Profile/Setting'
 import { LocationsPosted } from "./Tabs/HomeMap/LocationsPosted";
+import createDbTable from "./database_actions/createDbTable";
+import Notifications from "./Tabs/Notifications";
 
   const App = () => {
     const [isLogin, setIsLogin] = useState(null)
@@ -28,6 +30,14 @@ import { LocationsPosted } from "./Tabs/HomeMap/LocationsPosted";
       checkIslogin()
     },[])
 
+    useEffect(() => {
+      const initDB = async () => {
+        const result = await createDbTable()
+        console.log(result)
+      }
+      initDB()
+    },[])
+
     
     if (isLogin === null) {
       return (
@@ -44,6 +54,7 @@ import { LocationsPosted } from "./Tabs/HomeMap/LocationsPosted";
           <Stack.Screen name="Main" component={Main} options={{headerShown: false}} />
           <Stack.Screen name="Setting" component={Setting}/>
           <Stack.Screen name="locations" component={LocationsPosted} />
+          <Stack.Screen name="Notifications" component={Notifications} />
         </Stack.Navigator>
       </NavigationContainer>
     )

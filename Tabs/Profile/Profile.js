@@ -52,7 +52,7 @@ const Profile = ({ navigation }) => {
           source={
             currentProfile
               ? { uri: currentProfile }
-              : require("../../assets/me.png")
+              : require("../../assets/mee.png")
           }
           style={styles.profileImage}
         />
@@ -81,12 +81,7 @@ const Profile = ({ navigation }) => {
             <Text style={styles.buttonText}>Profile Settings</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.settingButton}>
-            <Lock color="#7c3aed" size={24} />
-            <Text style={styles.buttonText}>Privacy Settings</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.settingButton}>
+          <TouchableOpacity style={styles.settingButton} onPress={() => navigation.navigate("Notifications")}>
             <Bell color="#7c3aed" size={24} />
             <Text style={styles.buttonText}>Notifications</Text>
           </TouchableOpacity>

@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   FlatList,
   StatusBar,
+  Alert
 } from "react-native";
 import { Heart, Star, MapPin, Trash } from "lucide-react-native";
 import { useEffect, useState } from "react";
@@ -44,7 +45,7 @@ const Favorite = ({ navigation }) => {
       </View>
       <View style={styles.userInfo}>
       <Image
-            source={image? {uri:image} : require("../assets/me.png")}
+            source={image? {uri:image} : require("../assets/mee.png")}
             style={styles.userImage}
             resizeMode="cover"
           />
@@ -63,7 +64,27 @@ const Favorite = ({ navigation }) => {
           <Heart size={24} strokeWidth={2} color="red" />
         </TouchableOpacity>
         <TouchableOpacity>
-          <Trash size={24} strokeWidth={2} color="orange" onPress={() => deleteFavorite(item.post_id)}/>
+          <Trash size={24} strokeWidth={2} color="orange" onPress={() => {
+            Alert.alert(
+              "delete post",
+              "do you want to delete this favorite?",
+              [
+                {
+                  text: "Cancel",
+                  onPress: () => {
+                    console.log("you canceled delete");
+                  },
+                },
+                {
+                  text: "delete",
+                  onPress: () => {
+                    deleteFavorite(item.post_id)
+                  },
+                },
+              ],
+              { cancelable: false }
+            );
+          }}/>
         </TouchableOpacity>
       </View>
     </View>

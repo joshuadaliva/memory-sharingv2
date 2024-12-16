@@ -75,7 +75,7 @@ const AddPost = () => {
         value={caption}
         onChangeText={setCaption}
       />
-      <TextInput style={[styles.input]} placeholder="Location" value={location} onChangeText={setLocation}/>
+      <TextInput style={styles.input} placeholder="Location" value={location} onChangeText={setLocation}/>
 
       <TouchableOpacity
         style={{

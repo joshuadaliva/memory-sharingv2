@@ -3,30 +3,8 @@ import { Alert, StyleSheet, Text, View } from 'react-native'
 import * as SQLite from 'expo-sqlite'
 
 
-const createTableFavorites = async () => {
-    try{
-        const db = await SQLite.openDatabaseAsync("memorySharing")
-        await db.execAsync(`
-            CREATE TABLE IF NOT EXISTS favorites(
-                favorite_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                image TEXT NOT NULL,
-                title TEXT NOT NULL,
-                caption TEXT NOT NULL,
-                location TEXT NOT NULL,
-                user_id INTEGER NOT NULL,
-                post_id INTGER NOT NULL,
-                FOREIGN KEY(user_id) REFERENCES memory_users(user_id)
-                FOREIGN KEY(post_id) REFERENCES posts(post_id)
-            )   
-        `)
-    }catch(error){
-        console.log(error)
-    }
-}
-
 const addToFavorite = async (image, title, caption, location,user_id, post_id) => {
     try{
-        await createTableFavorites()
         if(!image || !title || !caption || !location || !user_id || !post_id){
             Alert.alert("use info is empty")
             return false;
@@ -38,6 +16,10 @@ const addToFavorite = async (image, title, caption, location,user_id, post_id) =
             return false
         }
         await db.runAsync("INSERT INTO favorites(image, title,caption,location,user_id,post_id) VALUES (?,?,?,?,?,?)", [image,title,caption,location,user_id,post_id])
+        const date = new Date().toLocaleTimeString()
+        const time = new Date().toLocaleDateString()
+        const today = date.toString() + " " + time.toString()
+        await db.runAsync("INSERT INTO notification(title, created_at, user_id) VALUES (?,?,?)", ["you added post to favorites on ", today,user_id])
         Alert.alert("added to favorite!")
         return true;
     }catch(error){

@@ -53,7 +53,7 @@ const getLocation = (setLocation) => {
         </View>
         <View style={styles.userInfo}>
           <Image
-            source={image? {uri:image} : require("../../assets/me.png")}
+            source={image? {uri:image} : require("../../assets/mee.png")}
             style={styles.userImage}
             resizeMode="cover"
           />

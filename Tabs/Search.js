@@ -39,7 +39,7 @@ const SearchPage = () => {
       </View>
       <View style={styles.userInfo}>
         <Image
-          source={require("../assets/me.png")}
+          source={require("../assets/mee.png")}
           style={styles.userImage}
           resizeMode="cover"
         />
