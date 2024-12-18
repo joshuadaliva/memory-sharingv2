@@ -14,7 +14,7 @@ import * as ImagePicker from "expo-image-picker";
 import {updateInfo} from '../../database_actions/updateInfo'
 import {updatePassword} from '../../database_actions/updateInfo'
 
-const Setting = ({navigation}) => {
+const Setting = ({navigation,route}) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [image, setImage] = useState(null);
@@ -25,6 +25,7 @@ const Setting = ({navigation}) => {
   const [newPassword, setNewPassword] = useState("")
   const [new2Password, setNew2Password] = useState("")
   const [showPassword, setShowPassword] = useState(false)
+  const {refresh, setRefresh} = route.params
 
   const pickImage = async () => {
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -65,6 +66,8 @@ const Setting = ({navigation}) => {
         setCurrentProfile(profile)
         setUsername(username);
         setEmail(email);
+        setRefresh(!refresh)
+        
       } catch (error) {
         console.log(error);
       }

@@ -20,6 +20,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const Profile = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [currentProfile, setCurrentProfile] = useState(null);
+  const [refresh, setRefresh] = useState(false)
 
   useEffect(() => {
     const getUsername = async () => {
@@ -29,7 +30,7 @@ const Profile = ({ navigation }) => {
       setUsername(name);
     };
     getUsername();
-  },[navigation,username]);
+  },[navigation,refresh]);
 
   const signOut = async () => {
     try {
@@ -75,7 +76,7 @@ const Profile = ({ navigation }) => {
         <View style={styles.settingsContainer}>
           <TouchableOpacity
             style={styles.settingButton}
-            onPress={() => navigation.navigate("Setting")}
+            onPress={() => navigation.navigate("Setting", {refresh, setRefresh})}
           >
             <Settings color="#7c3aed" size={24} />
             <Text style={styles.buttonText}>Profile Settings</Text>
